@@ -1,9 +1,9 @@
 pipeline {
-    agent { docker { image 'hello-word:latest' } }
+    agent { docker { image '3pcc_tng:huigjin1.6' } }
     stages {
         stage('build') {
             steps {
-                sh 'mvn --version'
+                sh 'uname -a'
             }
         }
     }
