@@ -1,0 +1,55 @@
+format_version: 3
+pipelines:
+  my_first_pipeline:
+    group: defaultGroup
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    materials:
+      git:
+        git: https://bitbucket-eng-sjc1.cisco.com/bitbucket/scm/synlite/synlite-pipeline-scripts.git
+        shallow_clone: false
+        auto_update: true
+        branch: mppdailySA
+    stages:
+    - testStage:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          testJob:
+            timeout: 0
+            tasks:
+            - exec:
+                command: pwd
+                run_if: passed
+            - plugin:
+                configuration:
+                  id: script-executor
+                  version: '1'
+                options:
+                  script: ./phones/pipeline/repo_utils.sh
+                  shtype: bash
+                run_if: passed
+    - testStage2:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          runScripts:
+            timeout: 0
+            tasks:
+            - plugin:
+                configuration:
+                  id: script-executor
+                  version: '1'
+                options:
+                  script: ./phones/pipeline/repo_utils.sh
+                  shtype: bash
+                run_if: passed
